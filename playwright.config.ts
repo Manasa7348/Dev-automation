@@ -1,0 +1,18 @@
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  testMatch: '**/*.spec.ts',
+  timeout: 30 * 1000,
+  retries: 1,
+  workers: 5,
+  reporter: [['list'], ['html', { open: 'never' }]],
+  use: {
+    baseURL: 'https://apidev.tenzingtechnologies.com',
+  },
+  projects: [
+    {
+      name: 'api',
+    },
+  ],
+});

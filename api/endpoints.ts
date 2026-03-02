@@ -1,0 +1,132 @@
+export const BASE_URL = process.env.API_BASE_URL || "https://your-api.com";
+
+export const COMMUNITY = {
+  chartOfAccounts: {
+    getAll:   () => `${BASE_URL}/community/chart-of-accounts`,
+    getById:  (id: string) => `${BASE_URL}/community/chart-of-accounts/${id}`,
+    create:   () => `${BASE_URL}/community/chart-of-accounts`,
+    update:   (id: string) => `${BASE_URL}/community/chart-of-accounts/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/chart-of-accounts/${id}`,
+  },
+  departments: {
+    getAll:   () => `${BASE_URL}/community/departments`,
+    getById:  (id: string) => `${BASE_URL}/community/departments/${id}`,
+    create:   () => `${BASE_URL}/community/departments`,
+    update:   (id: string) => `${BASE_URL}/community/departments/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/departments/${id}`,
+  },
+  familyLeavePolicy: {
+    getAll:   () => `${BASE_URL}/community/family-leave-policy`,
+    getById:  (id: string) => `${BASE_URL}/community/family-leave-policy/${id}`,
+    create:   () => `${BASE_URL}/community/family-leave-policy`,
+    update:   (id: string) => `${BASE_URL}/community/family-leave-policy/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/family-leave-policy/${id}`,
+  },
+  grade: {
+    getAll:   () => `${BASE_URL}/community/grades`,
+    getById:  (id: string) => `${BASE_URL}/community/grades/${id}`,
+    create:   () => `${BASE_URL}/community/grades`,
+    update:   (id: string) => `${BASE_URL}/community/grades/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/grades/${id}`,
+  },
+  holiday: {
+    getAll:   () => `${BASE_URL}/community/holidays`,
+    getById:  (id: string) => `${BASE_URL}/community/holidays/${id}`,
+    create:   () => `${BASE_URL}/community/holidays`,
+    update:   (id: string) => `${BASE_URL}/community/holidays/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/holidays/${id}`,
+  },
+  jobRoles: {
+    getAll:   () => `${BASE_URL}/community/job-roles`,
+    getById:  (id: string) => `${BASE_URL}/community/job-roles/${id}`,
+    create:   () => `${BASE_URL}/community/job-roles`,
+    update:   (id: string) => `${BASE_URL}/community/job-roles/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/job-roles/${id}`,
+  },
+  payBand: {
+    getAll:   () => `${BASE_URL}/community/pay-bands`,
+    getById:  (id: string) => `${BASE_URL}/community/pay-bands/${id}`,
+    create:   () => `${BASE_URL}/community/pay-bands`,
+    update:   (id: string) => `${BASE_URL}/community/pay-bands/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/pay-bands/${id}`,
+  },
+  payElements: {
+    getAll:   () => `${BASE_URL}/community/pay-elements`,
+    getById:  (id: string) => `${BASE_URL}/community/pay-elements/${id}`,
+    create:   () => `${BASE_URL}/community/pay-elements`,
+    update:   (id: string) => `${BASE_URL}/community/pay-elements/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/pay-elements/${id}`,
+  },
+  payElementTable: {
+    getAll:   () => `${BASE_URL}/community/pay-element-tables`,
+    getById:  (id: string) => `${BASE_URL}/community/pay-element-tables/${id}`,
+    create:   () => `${BASE_URL}/community/pay-element-tables`,
+    update:   (id: string) => `${BASE_URL}/community/pay-element-tables/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/pay-element-tables/${id}`,
+  },
+  payScale: {
+    getAll:   () => `${BASE_URL}/community/pay-scales`,
+    getById:  (id: string) => `${BASE_URL}/community/pay-scales/${id}`,
+    create:   () => `${BASE_URL}/community/pay-scales`,
+    update:   (id: string) => `${BASE_URL}/community/pay-scales/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/pay-scales/${id}`,
+  },
+  qualification: {
+    getAll:   () => `${BASE_URL}/community/qualifications`,
+    getById:  (id: string) => `${BASE_URL}/community/qualifications/${id}`,
+    create:   () => `${BASE_URL}/community/qualifications`,
+    update:   (id: string) => `${BASE_URL}/community/qualifications/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/qualifications/${id}`,
+  },
+  sickLeavePolicy: {
+    getAll:   () => `${BASE_URL}/community/sick-leave-policy`,
+    getById:  (id: string) => `${BASE_URL}/community/sick-leave-policy/${id}`,
+    create:   () => `${BASE_URL}/community/sick-leave-policy`,
+    update:   (id: string) => `${BASE_URL}/community/sick-leave-policy/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/sick-leave-policy/${id}`,
+  },
+  skills: {
+    getAll:   () => `${BASE_URL}/community/skills`,
+    getById:  (id: string) => `${BASE_URL}/community/skills/${id}`,
+    create:   () => `${BASE_URL}/community/skills`,
+    update:   (id: string) => `${BASE_URL}/community/skills/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/skills/${id}`,
+  },
+  termDate: {
+    getAll:   () => `${BASE_URL}/community/term-dates`,
+    getById:  (id: string) => `${BASE_URL}/community/term-dates/${id}`,
+    create:   () => `${BASE_URL}/community/term-dates`,
+    update:   (id: string) => `${BASE_URL}/community/term-dates/${id}`,
+    delete:   (id: string) => `${BASE_URL}/community/term-dates/${id}`,
+  },
+};
+
+export const SECTOR = {
+  pension: {
+    rateTable: {
+      getAll:    () => `${BASE_URL}/sector/pension/rate-tables`,
+      getLookup: () => `${BASE_URL}/sector/pension/rate-tables/lookup`,
+      getById:   (id: string) => `${BASE_URL}/sector/pension/rate-tables/${id}`,
+      getBands:  (id: string) => `${BASE_URL}/sector/pension/rate-tables/${id}/bands`,
+      create:    () => `${BASE_URL}/sector/pension/rate-tables`,
+      addDate:   (id: string) => `${BASE_URL}/sector/pension/rate-tables/${id}/dates`,
+      rename:    (id: string) => `${BASE_URL}/sector/pension/rate-tables/${id}/rename`,
+      deleteDate:(id: string) => `${BASE_URL}/sector/pension/rate-tables/${id}/dates`,
+      delete:    (id: string) => `${BASE_URL}/sector/pension/rate-tables/${id}`,
+    },
+    fund: {
+      getAll:  () => `${BASE_URL}/sector/pension/funds`,
+      getById: (id: string) => `${BASE_URL}/sector/pension/funds/${id}`,
+      create:  () => `${BASE_URL}/sector/pension/funds`,
+      update:  (id: string) => `${BASE_URL}/sector/pension/funds/${id}`,
+      delete:  (id: string) => `${BASE_URL}/sector/pension/funds/${id}`,
+    },
+    additionalContribution: {
+      getAll:  () => `${BASE_URL}/sector/pension/additional-contributions`,
+      getById: (id: string) => `${BASE_URL}/sector/pension/additional-contributions/${id}`,
+      create:  () => `${BASE_URL}/sector/pension/additional-contributions`,
+      update:  (id: string) => `${BASE_URL}/sector/pension/additional-contributions/${id}`,
+      delete:  (id: string) => `${BASE_URL}/sector/pension/additional-contributions/${id}`,
+    },
+  },
+};
