@@ -157,3 +157,15 @@ test('Term Time Only API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+
+test.afterEach(async ({ request, token }) => {
+  if (ttId) {
+    try {
+      const termTime = new TermTimeOnlyAPI(request, token);
+      await termTime.delete(ttId, token);
+      ttId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

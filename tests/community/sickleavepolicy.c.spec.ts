@@ -164,3 +164,14 @@ test('Sick Leave Policy API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+test.afterEach(async ({ request, token }) => {
+  if (slpId) {
+    try {
+      const sickLeavePolicy = new SickLeavePolicyAPI(request, token);
+      await sickLeavePolicy.deleteSickLeavePolicy(slpId, token);
+      slpId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

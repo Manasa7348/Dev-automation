@@ -68,3 +68,15 @@ test('Sector Qualification API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+
+test.afterEach(async ({ request, token }) => {
+  if (qualificationId) {
+    try {
+      const qualification = new QualificationAPI(request);
+      await qualification.deleteQualification(qualificationId, token);
+      qualificationId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

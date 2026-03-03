@@ -146,3 +146,14 @@ test('Grades API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+test.afterEach(async ({ request, token }) => {
+  if (gradeId) {
+    try {
+      const grades = new GradesAPI(request, token);
+      await grades.deleteGrade(gradeId, token);
+      gradeId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

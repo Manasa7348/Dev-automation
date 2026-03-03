@@ -201,3 +201,15 @@ test('Term Date Set API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+test.afterEach(async ({ request, token }) => {
+  if (tgId) {
+    try {
+      const termDateSet = new TermDateSetAPI(request, token);
+      await termDateSet.deleteTermDateSet(tgId, token);
+      tgId = undefined as any;   // reset parent
+      tdId = undefined as any;   // reset child
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

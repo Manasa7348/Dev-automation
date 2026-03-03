@@ -101,3 +101,15 @@ test('Employer Third Party API Tests', async ({ request, token, employerId }) =>
 
   report.summary();
 });
+
+test.afterEach(async ({ request, token, employerId }) => {
+  if (thirdPartyId) {
+    try {
+      const tp = new ThirdPartyAPI(request);
+      await tp.delete(employerId, thirdPartyId, token);
+      thirdPartyId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

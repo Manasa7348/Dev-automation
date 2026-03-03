@@ -80,3 +80,14 @@ test('System Public Holiday API Tests', async ({ request, token }) => {
 
   report.summary();
 });
+test.afterEach(async ({ request, token }) => {
+  if (holidayId) {
+    try {
+      const holiday = new PublicHolidayAPI(request);
+      await holiday.delete(holidayId, token);
+      holidayId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

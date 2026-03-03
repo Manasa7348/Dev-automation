@@ -293,3 +293,33 @@ test('Pension API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+test.afterEach(async ({ request, token }) => {
+  const pension = new PensionAPI(request, token);
+
+  try {
+    // 1️⃣ Delete Pension Fund (must be first because it depends on Rate Table)
+    if (pfId) {
+      await pension.deletePension(pfId, token);
+      pfId = undefined as any;
+    }
+
+    // 2️⃣ Delete Additional Contribution
+    if (acId) {
+      await pension.deleteAdditionalContribution(acId, token);
+      acId = undefined as any;
+    }
+
+    // 3️⃣ Delete Rate Table Date (safe attempt)
+    if (rtId) {
+      try {
+        await pension.deleteRateTableDate(rtId, '2026/03/01', token);
+      } catch {}
+
+      // 4️⃣ Delete Rate Table
+      await pension.deleteRateTable(rtId, token);
+      rtId = undefined as any;
+    }
+  } catch (error) {
+    console.log('Cleanup failed:', error);
+  }
+});

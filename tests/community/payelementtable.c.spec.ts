@@ -159,3 +159,15 @@ test('Pay Element Table API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+
+test.afterEach(async ({ request, token }) => {
+  if (petId) {
+    try {
+      const payElementTable = new PayElementTableAPI(request, token);
+      await payElementTable.deletePayElementTable(petId, token);
+      petId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

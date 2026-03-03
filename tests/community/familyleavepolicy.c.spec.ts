@@ -106,3 +106,15 @@ test('Family Leave Policy API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+
+test.afterEach(async ({ request, token }) => {
+  if (flpId) {
+    try {
+      const familyLeavePolicy = new FamilyLeavePolicyAPI(request, token);
+      await familyLeavePolicy.deleteFamilyLeavePolicy(flpId, token);
+      flpId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

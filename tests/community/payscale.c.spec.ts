@@ -205,3 +205,15 @@ test('Pay Scales API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+
+test.afterEach(async ({ request, token }) => {
+  if (payscaleId) {
+    try {
+      const payscales = new PayScalesAPI(request, token);
+      await payscales.deletePayScale(payscaleId, token);
+      payscaleId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});

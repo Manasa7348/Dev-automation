@@ -172,3 +172,14 @@ test('Pay Band API Framework Tests', async ({ request, token }) => {
 
   report.summary();
 });
+test.afterEach(async ({ request, token }) => {
+  if (pbId) {
+    try {
+      const payBand = new PayBandAPI(request, token);
+      await payBand.deletePayBand(pbId, token);
+      pbId = undefined as any; // reset
+    } catch (error) {
+      console.log('Cleanup failed:', error);
+    }
+  }
+});
