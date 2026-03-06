@@ -92,11 +92,15 @@ test('Family Leave Policy API Framework Tests', async ({ request, token }) => {
   await assertStep(report, 'GET Template', async () => {
     const res = await familyLeavePolicy.downloadTemplate(token);
     expect(res.status()).toBe(200);
+
+    
   });
 
   await assertStep(report, 'GET Export', async () => {
     const res = await familyLeavePolicy.exportFamilyLeavePolicy(flpId, token);
     expect(res.status()).toBe(200);
+   
+     
   });
 
   await assertStep(report, 'DELETE', async () => {

@@ -7,6 +7,7 @@ export default defineConfig({
   retries: 1,
   workers: 1,
   reporter: [['list'], ['html', { open: 'never' }]],
+  globalTeardown: './global-teardown.ts',
   use: {
     baseURL: 'https://apidev.tenzingtechnologies.com',
   },
