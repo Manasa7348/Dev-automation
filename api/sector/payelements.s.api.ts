@@ -63,12 +63,12 @@ export class PayElementsAPI {
     });
   }
 
-//   delete(peId: string, token: string) {
-//     return this.request.delete(`${this.base}/${this.employerId}/pay-elements/${peId}`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         accept: 'application/json'
-//       }
-//     });
-//   }
+  delete(peId: string, token: string) {
+    return this.request.delete(`${this.base}/${this.employerId}/pay-elements/${peId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        accept: 'application/json'
+      }
+    });
+  }
 }

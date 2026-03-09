@@ -91,4 +91,17 @@ export class TermTimeOnlyAPI extends ApiClient {
       headers: { Authorization: `Bearer ${this.token}` }
     });
   }
+
+
+getTemplate(token: string) {
+  return this.request.get('/v1/community/term-time-only/template', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
+exportTermTime(termTimeId: string, token: string) {
+  return this.request.get(`/v1/community/term-time-only/${termTimeId}/export`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
 }

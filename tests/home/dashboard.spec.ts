@@ -5,7 +5,7 @@ import { TestReporter, assertStep } from '../../utils/reporter';
 test('Sector - Users & Dashboard API Tests', async ({ request, token }) => {
 
   const api = new UserDashboardAPI(request);
-  const report = new TestReporter('Sector - Users & Dashboard');
+  const report = new TestReporter('Home- Users & Dashboard');
 
   // Hardcoded employerId (from Swagger – working one)
   const dashboardEmployerId = '58f70185-d74a-494a-91de-38e33ef8b576';
@@ -18,13 +18,13 @@ test('Sector - Users & Dashboard API Tests', async ({ request, token }) => {
     const res = await api.getAllUsers(token);
     const body = await res.json();
 
-    console.log('Users Status:', res.status());
+   
 
     expect(res.status()).toBe(200);
     expect(body.isSuccess).toBeTruthy();
     expect(Array.isArray(body.result)).toBeTruthy();
 
-    console.log('Total Users:', body.result.length);
+   
   });
 
   // ─────────────────────────────
@@ -37,8 +37,7 @@ test('Sector - Users & Dashboard API Tests', async ({ request, token }) => {
       token
     );
 
-    console.log('Dashboard Status:', res.status());
-    console.log('Dashboard URL:', res.url());
+   
 
     const body = await res.json();
 

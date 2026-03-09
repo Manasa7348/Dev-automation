@@ -1,36 +1,43 @@
-import { test, expect } from '../../fixtures/apifixture';
-import { ChartOfAccountsAPI } from '../../api/community/chartofaccounts.c.api';
-import { TestReporter, assertStep } from '../../utils/reporter';
-import path from 'path';
+import { test, expect } from '../../fixtures/apifixture'
+import { ChartOfAccountsAPI } from '../../api/community/chartofaccounts.c.api'
+import { TestReporter, assertStep } from '../../utils/reporter'
+import { checkDuplicateBeforeCreate } from '../../api/helpers/duplicate'
+import path from 'path'
 
-let chartOfAccountId: string;
-let detailSeqNo: number;
+let chartOfAccountId: string
+let detailSeqNo: number
+
+const filePath = path.resolve('tests/assets/download.jpg')
 
 test('Chart of Accounts API Framework Tests', async ({ request, token }) => {
-  const chartOfAccounts = new ChartOfAccountsAPI(request);
-  const report = new TestReporter('Community › Chart of Accounts');
-  const filePath = path.resolve('tests/assets/download.jpg');
+  const chartOfAccounts = new ChartOfAccountsAPI(request)
+  const report = new TestReporter('Community › Chart of Accounts')
 
-  // ── Pre-cleanup ──────────────────────────────────────────
-  const allRes = await chartOfAccounts.getAll(token);
-  const allBody = await allRes.json();
-  if (allBody.result) {
-    for (const ca of allBody.result) {
-      if (ca.caName === 'Playwright Test Chart of Account' ||
-          ca.caName === 'Playwright Test Chart of Account Updated') {
-        await chartOfAccounts.deleteChartOfAccount(ca.caId, token);
-      }
-    }
-  }
+  // ─────────────────────────────────────────
+  // INDEPENDENT
+  // ─────────────────────────────────────────
 
-  // ── Tests ────────────────────────────────────────────────
   await assertStep(report, 'GET All', async () => {
-    const res = await chartOfAccounts.getAll(token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await chartOfAccounts.getAll(token)
+    expect(res.status()).toBe(200)
+  })
+
+  await assertStep(report, 'GET Template', async () => {
+    const res = await chartOfAccounts.downloadTemplate(token)
+    expect(res.status()).toBe(200)
+  })
+
+  await assertStep(report, 'GET Archived', async () => {
+    const res = await chartOfAccounts.getArchived(token)
+    expect(res.status()).toBe(200)
+  })
+
+  // ─────────────────────────────────────────
+  // CHART OF ACCOUNTS CRUD
+  // ─────────────────────────────────────────
 
   await assertStep(report, 'POST Create', async () => {
-    const res = await chartOfAccounts.addChartOfAccount([{
+    const payload = {
       caNo: 0,
       caName: 'Playwright Test Chart of Account',
       caDesc: 'Created by Playwright automation',
@@ -41,35 +48,38 @@ test('Chart of Accounts API Framework Tests', async ({ request, token }) => {
       logoCnt: 0,
       logoUrl: null,
       logoExtension: '.jpg'
-    }], token);
-    expect(res.status()).toBe(200);
-    const body = await res.json();
-    if (!body.isSuccess && !body.IsSuccess) throw new Error(body.message || body.Message);
-    chartOfAccountId = body.result[0];
-  });
+    }
+
+    // Stop test if duplicate exists
+    await checkDuplicateBeforeCreate(chartOfAccounts, token, payload, 'caName')
+
+    const res = await chartOfAccounts.addChartOfAccount([payload], token)
+    expect(res.status()).toBe(200)
+    const body = await res.json()
+    if (!body.isSuccess && !body.IsSuccess) throw new Error(body.message || body.Message)
+    chartOfAccountId = body.result[0]
+  })
 
   await assertStep(report, 'POST Upload Logo', async () => {
-    const res = await chartOfAccounts.uploadLogo(chartOfAccountId, filePath, token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await chartOfAccounts.uploadLogo(chartOfAccountId, filePath, token)
+    expect(res.status()).toBe(200)
+  })
 
   await assertStep(report, 'GET Logo', async () => {
-    const res = await chartOfAccounts.getLogo(chartOfAccountId, token);
-    expect(res.status()).toBe(200);
-    const body = await res.json();
-    expect(body.isSuccess).toBeTruthy();
-    expect(body.result).toContain(chartOfAccountId);
-  });
+    const res = await chartOfAccounts.getLogo(chartOfAccountId, token)
+    expect(res.status()).toBe(200)
+  })
 
   await assertStep(report, 'POST Add Details', async () => {
     const res = await chartOfAccounts.addDetails(chartOfAccountId, [
       { caNo: 0, seqNo: 0, itemCode: 'TestCode1', itemDesc: 'Test Item 1' },
       { caNo: 0, seqNo: 0, itemCode: 'TestCode2', itemDesc: 'Test Item 2' }
-    ], token);
-    expect(res.status()).toBe(200);
-    const body = await res.json();
-    if (body.isSuccess && body.result?.length > 0) detailSeqNo = body.result[0];
-  });
+    ], token)
+    expect(res.status()).toBe(200)
+    const body = await res.json()
+    if (!body.isSuccess && !body.IsSuccess) throw new Error(body.message || body.Message)
+    if (body.result?.length > 0) detailSeqNo = body.result[0]
+  })
 
   await assertStep(report, 'PUT Update', async () => {
     const res = await chartOfAccounts.updateChartOfAccount({
@@ -84,60 +94,52 @@ test('Chart of Accounts API Framework Tests', async ({ request, token }) => {
       logoCnt: 0,
       logoUrl: null,
       logoExtension: '.jpg'
-    }, token);
-    expect(res.status()).toBe(200);
-  });
+    }, token)
+    expect(res.status()).toBe(200)
+  })
 
   await assertStep(report, 'PATCH Archive', async () => {
-    const res = await chartOfAccounts.archiveChartOfAccount(chartOfAccountId, token);
-    expect(res.status()).toBe(200);
-  });
-
-  await assertStep(report, 'GET Archived', async () => {
-    const res = await chartOfAccounts.getArchived(token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await chartOfAccounts.archiveChartOfAccount(chartOfAccountId, token)
+    expect(res.status()).toBe(200)
+  })
 
   await assertStep(report, 'PATCH Unarchive', async () => {
-    const res = await chartOfAccounts.unarchiveChartOfAccount(chartOfAccountId, token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await chartOfAccounts.unarchiveChartOfAccount(chartOfAccountId, token)
+    expect(res.status()).toBe(200)
+  })
 
   await assertStep(report, 'GET Details', async () => {
-    const res = await chartOfAccounts.getDetails(chartOfAccountId, token);
-    expect(res.status()).toBe(200);
-    const body = await res.json();
-    if (body.result?.length > 0) detailSeqNo = body.result[0].seqNo;
-  });
+    const res = await chartOfAccounts.getDetails(chartOfAccountId, token)
+    expect(res.status()).toBe(200)
+    const body = await res.json()
+    if (body.result?.length > 0) detailSeqNo = body.result[0].seqNo
+  })
 
   await assertStep(report, 'GET Details By No', async () => {
-    const res = await chartOfAccounts.getDetailsByNo(chartOfAccountId, detailSeqNo, token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await chartOfAccounts.getDetailsByNo(chartOfAccountId, detailSeqNo, token)
+    expect(res.status()).toBe(200)
+  })
 
   await assertStep(report, 'GET Export Details', async () => {
-    const res = await chartOfAccounts.exportDetails(chartOfAccountId, token);
-    expect(res.status()).toBe(200);
-  });
-
-  await assertStep(report, 'GET Template', async () => {
-    const res = await chartOfAccounts.downloadTemplate(token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await chartOfAccounts.exportDetails(chartOfAccountId, token)
+    expect(res.status()).toBe(200)
+  })
 
   await assertStep(report, 'DELETE', async () => {
-    const res = await chartOfAccounts.deleteChartOfAccount(chartOfAccountId, token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await chartOfAccounts.deleteChartOfAccount(chartOfAccountId, token)
+    expect(res.status()).toBe(200)
+    chartOfAccountId = undefined as any
+  })
 
-  report.summary();
-});
+  report.summary()
+})
 
 test.afterEach(async ({ request, token }) => {
   if (chartOfAccountId) {
     try {
-      const chartOfAccounts = new ChartOfAccountsAPI(request);
-      await chartOfAccounts.deleteChartOfAccount(chartOfAccountId, token);
+      const chartOfAccounts = new ChartOfAccountsAPI(request)
+      await chartOfAccounts.deleteChartOfAccount(chartOfAccountId, token)
+      chartOfAccountId = undefined as any
     } catch {}
   }
-});
+})

@@ -39,7 +39,11 @@ export class QualificationAPI {
       data
     });
   }
-
+async downloadTemplate(token: string) {
+  return this.request.get(`${this.baseUrl}/template`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+}
   async deleteQualification(id: string, token: string) {
     return this.request.delete(`${this.baseUrl}?id=${id}`, {
       headers: { Authorization: `Bearer ${token}` }

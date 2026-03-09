@@ -5,7 +5,7 @@ import { TestReporter, assertStep } from '../../utils/reporter';
 test('Sector - Release Notes API Tests', async ({ request, token }) => {
 
   const api = new ReleaseNotesAPI(request);
-  const report = new TestReporter('Sector - Release Notes');
+  const report = new TestReporter('Home › Release Notes');
 
   // ─────────────────────────────
   // GET RELEASE NOTES
@@ -14,8 +14,7 @@ test('Sector - Release Notes API Tests', async ({ request, token }) => {
 
     const res = await api.getReleaseNotes(token);
 
-    console.log('Status:', res.status());
-    console.log('URL:', res.url());
+
 
     const body = await res.json();
 
@@ -23,7 +22,7 @@ test('Sector - Release Notes API Tests', async ({ request, token }) => {
     expect(body.isSuccess).toBeTruthy();
     expect(Array.isArray(body.result)).toBeTruthy();
 
-    console.log('Total Release Notes:', body.result.length);
+   
 
     // Optional field validation
     if (body.result.length > 0) {

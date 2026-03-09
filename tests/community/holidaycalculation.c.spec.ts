@@ -145,7 +145,16 @@ test('Term Time Only API Framework Tests', async ({ request, token }) => {
     const res = await termTime.getCards(token);
     expect(res.status()).toBe(200);
   });
+  
+await assertStep(report, 'GET Term Time Only Template', async () => {
+  const res = await termTime.getTemplate(token);
+  expect(res.status()).toBe(200);
+});
 
+await assertStep(report, 'GET Export Term Time Only', async () => {
+  const res = await termTime.exportTermTime(ttId, token);
+  expect(res.status()).toBe(200);
+});
   // ─────────────────────────────────────────
   // DELETE
   // ─────────────────────────────────────────

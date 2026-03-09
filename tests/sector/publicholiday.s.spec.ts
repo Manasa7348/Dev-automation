@@ -1,29 +1,30 @@
-import { test, expect } from '../../fixtures/apifixture';
-import { PublicHolidayAPI } from '../../api/sector/publicholiday.s.api';
-import { TestReporter, assertStep } from '../../utils/reporter';
+import { test, expect } from '../../fixtures/apifixture'
+import { PublicHolidayAPI } from '../../api/sector/publicholiday.s.api'
+import { TestReporter, assertStep } from '../../utils/reporter'
+import { checkDuplicateBeforeCreate } from '../../api/helpers/duplicate'
 
-let holidayId: string;
+let holidayId: string
 
 test('System Public Holiday API Tests', async ({ request, token }) => {
 
-  const holiday = new PublicHolidayAPI(request);
-  const report = new TestReporter('Sector - Public Holiday ');
+  const holiday = new PublicHolidayAPI(request)
+  const report = new TestReporter('Sector - Public Holiday ')
 
-  const region = 'CYM';
+  const region = 'CYM'
 
   // ─────────────────────────────
   // GET ALL
   // ─────────────────────────────
   await assertStep(report, 'GET Public Holidays by Region', async () => {
-    const res = await holiday.getAll(region, token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await holiday.getAll(region, token)
+    expect(res.status()).toBe(200)
+  })
 
   // ─────────────────────────────
   // CREATE
   // ─────────────────────────────
   await assertStep(report, 'Create Public Holiday', async () => {
-    const res = await holiday.create({
+    const payload = {
       regionId: region,
       hDate: '2027-03-02',
       description: 'Automation Holiday',
@@ -31,23 +32,27 @@ test('System Public Holiday API Tests', async ({ request, token }) => {
       creDate: new Date().toISOString(),
       amdBy: 0,
       amdDate: new Date().toISOString()
-    }, token);
+    }
 
-    const body = await res.json();
+    // Stop test if duplicate exists
+    await checkDuplicateBeforeCreate(holiday, token, payload, 'description')
 
-    expect(res.status()).toBe(200);
-    expect(body.isSuccess).toBeTruthy();
+    const res = await holiday.create(payload, token)
+    const body = await res.json()
 
-    holidayId = body.result;
-  });
+    expect(res.status()).toBe(200)
+    expect(body.isSuccess).toBeTruthy()
+
+    holidayId = body.result
+  })
 
   // ─────────────────────────────
   // GET BY ID
   // ─────────────────────────────
   await assertStep(report, 'GET Public Holiday By ID', async () => {
-    const res = await holiday.getById(holidayId, token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await holiday.getById(holidayId, token)
+    expect(res.status()).toBe(200)
+  })
 
   // ─────────────────────────────
   // UPDATE
@@ -62,32 +67,33 @@ test('System Public Holiday API Tests', async ({ request, token }) => {
       creDate: new Date().toISOString(),
       amdBy: 0,
       amdDate: new Date().toISOString()
-    }, token);
+    }, token)
 
-    const body = await res.json();
+    const body = await res.json()
 
-    expect(res.status()).toBe(200);
-    expect(body.isSuccess).toBeTruthy();
-  });
+    expect(res.status()).toBe(200)
+    expect(body.isSuccess).toBeTruthy()
+  })
 
   // ─────────────────────────────
   // DELETE
   // ─────────────────────────────
   await assertStep(report, 'Delete Public Holiday', async () => {
-    const res = await holiday.delete(holidayId, token);
-    expect(res.status()).toBe(200);
-  });
+    const res = await holiday.delete(holidayId, token)
+    expect(res.status()).toBe(200)
+  })
 
-  report.summary();
-});
+  report.summary()
+})
+
 test.afterEach(async ({ request, token }) => {
   if (holidayId) {
     try {
-      const holiday = new PublicHolidayAPI(request);
-      await holiday.delete(holidayId, token);
-      holidayId = undefined as any; // reset
+      const holiday = new PublicHolidayAPI(request)
+      await holiday.delete(holidayId, token)
+      holidayId = undefined as any
     } catch (error) {
-      console.log('Cleanup failed:', error);
+      console.log('Cleanup failed:', error)
     }
   }
-});
+})

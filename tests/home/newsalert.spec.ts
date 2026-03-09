@@ -7,7 +7,7 @@ let newsNo: number;
 test('System News Alert API Tests', async ({ request, token }) => {
 
   const api = new NewsAlertAPI(request);
-  const report = new TestReporter('System › News Alert');
+  const report = new TestReporter('Home › News Alert');
   const version = '1';
 
   // ─────────────────────────────

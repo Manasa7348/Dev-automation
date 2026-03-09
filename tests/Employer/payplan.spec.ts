@@ -7,7 +7,7 @@ let ppId: string;
 
 test('Pay Plan API Framework Tests', async ({ request, token }) => {
   const payPlan = new PayPlanAPI(request);
-  const report = new TestReporter('Sector › Pay Plan');
+  const report = new TestReporter('Employer › Pay Plan');
 
   // ── Tests ────────────────────────────────────────────────
 

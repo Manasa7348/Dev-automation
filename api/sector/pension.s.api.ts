@@ -1,5 +1,7 @@
 import { APIRequestContext } from '@playwright/test';
 import { ApiClient } from '../apiClient';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export class PensionAPI extends ApiClient {
   constructor(request: APIRequestContext, token: string) {
@@ -139,6 +141,49 @@ export class PensionAPI extends ApiClient {
 
   deleteAdditionalContribution(acId: string, token: string) {
     return this.request.delete(`/v1/pension/additional-contributions/${acId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+
+
+  // ─────────────────────────────────────────
+  // GUIDANCE DOCUMENTS & FILE OPERATIONS
+  // ─────────────────────────────────────────
+
+  uploadFundDocument(id: string, filePath: string, token: string) {
+    return this.request.post(`/v1/pension/funds/${id}/upload`, {
+      headers: { Authorization: `Bearer ${token}` },
+      multipart: {
+        file: {
+          name: path.basename(filePath),
+          mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          buffer: fs.readFileSync(filePath)
+        }
+      }
+    });
+  }
+
+  downloadGuidanceDocument(pfId: string, docId: string, token: string) {
+    return this.request.get(`/v1/pension/funds/${pfId}/guidance-documents/${docId}/download`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  getGuidanceDocuments(pfId: string, token: string) {
+    return this.request.get(`/v1/pension/${pfId}/guidance-documents`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  getGuidanceDocumentById(pfId: string, docId: string, token: string) {
+    return this.request.get(`/v1/pension/funds/${pfId}/guidance-documents/${docId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  deleteFundDocument(pfId: string, docId: string, token: string) {
+    return this.request.delete(`/v1/pension/funds/${pfId}/documents/${docId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   }
