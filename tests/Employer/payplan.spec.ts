@@ -1,15 +1,13 @@
 import { test, expect } from '../../fixtures/apifixture';
 import { PayPlanAPI } from '../../api/Employer/payplan.api';
 import { TestReporter, assertStep } from '../../utils/reporter';
-import { checkDuplicateBeforeCreate } from '../../api/helpers/duplicate';
 
 let ppId: string;
+const PP_NAME = `playwright pay plan ${Date.now()}`
 
 test('Pay Plan API Framework Tests', async ({ request, token }) => {
   const payPlan = new PayPlanAPI(request);
   const report = new TestReporter('Employer › Pay Plan');
-
-  // ── Tests ────────────────────────────────────────────────
 
   await assertStep(report, 'GET All', async () => {
     const res = await payPlan.getAll(token);
@@ -19,19 +17,13 @@ test('Pay Plan API Framework Tests', async ({ request, token }) => {
   });
 
   await assertStep(report, 'POST Create', async () => {
-     
-    const payload = {
+    const res = await payPlan.create({
       ppNo: 0,
       erNo: 0,
-      ppName: 'playwright pay plan',
+      ppName: PP_NAME,
       ppMethod: 2,
       ppValue: 31
-    };
-
-    // Stop test if duplicate exists
-    await checkDuplicateBeforeCreate(payPlan, token, payload, 'ppName');
-
-    const res = await payPlan.create(payload, token);
+    }, token);
     expect(res.status()).toBe(200);
     const body = await res.json();
     if (!body.isSuccess) throw new Error(body.message);
@@ -51,7 +43,7 @@ test('Pay Plan API Framework Tests', async ({ request, token }) => {
       ppId: ppId,
       ppNo: 0,
       erNo: 0,
-      ppName: 'Playwright Pay Plan Updated',
+      ppName: `${PP_NAME} updated`,
       ppMethod: 1,
       ppValue: 0
     }, token);
@@ -65,17 +57,18 @@ test('Pay Plan API Framework Tests', async ({ request, token }) => {
     expect(res.status()).toBe(200);
     const body = await res.json();
     if (!body.isSuccess) throw new Error(body.message);
+    ppId = undefined as any;
   });
 
   report.summary();
 });
 
 test.afterEach(async ({ request, token }) => {
-if (ppId) {
-try {
-const payPlan = new PayPlanAPI(request);
-await payPlan.delete(ppId, token);
-ppId = undefined as any;
-} catch {}
- }
+  if (ppId) {
+    try {
+      const payPlan = new PayPlanAPI(request);
+      await payPlan.delete(ppId, token);
+      ppId = undefined as any;
+    } catch {}
+  }
 });
